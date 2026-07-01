@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   smcp:
-    image: brunopelatieri/mcp-n8n-bruia:lasted
+    image: brunopelatieri/mcp-n8n-bruia:latest
     networks:
       - bru
 
@@ -14,6 +14,10 @@ services:
       - N8N_API_KEY_FILE=/run/secrets/n8n_api_key
       - MCP_ALLOWED_KEYS_FILE=/run/secrets/mcp_allowed_keys
       - NODE_ENV=production
+      # Opcionais — ver README.md ("Variáveis de ambiente opcionais"). Sem
+      # defini-las, o comportamento é idêntico ao atual.
+      # - N8N_SSRF_MODE=moderate
+      # - ALLOW_DEFAULT_N8N_CREDENTIALS=false
     secrets:
       - n8n_url
       - n8n_api_key

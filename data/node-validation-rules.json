@@ -1,0 +1,391 @@
+{
+  "_meta": {
+    "extractedFromPackage": "n8n-nodes-base",
+    "extractedFromVersion": "2.29.0 (master, não lançado)",
+    "extractedAt": "2026-07-01",
+    "note": "Curado manualmente a partir da lista da Bru.ia. VALIDADO diretamente contra o código-fonte oficial de n8n-io/n8n (branch master, correspondente a ~2.29.0, ainda não lançado em tag estável) em 2026-07-01. Ver bloco _validationNotes para o detalhe de cada correção feita em relação ao arquivo original.",
+    "validatedAgainstSource": true,
+    "versionDiscrepancyNote": "A validação original (2026-07-01) foi feita contra a branch 'master' do n8n-io/n8n, não contra uma tag de release estável — na prática, 'master' está sempre um pouco à frente da última versão publicada/instalável. Para reduzir esse risco, reconfirmamos (2026-07-01, mesma data) cada ponto sensível de _validationNotes contra a tag 'n8n@2.27.5' (a última release estável no momento). Resultado: comparando a árvore de arquivos entre a tag n8n@2.27.5 e master via GitHub compare API, ZERO arquivos em packages/nodes-base/(nodes|credentials) mudaram entre as duas — ou seja, todo o código-fonte relevante para as 32 curadorias deste arquivo é idêntico em ambas as versões. Todos os pontos de _validationNotes foram reconfirmados diretamente contra os arquivos-fonte na tag n8n@2.27.5 (não apenas por comparação de diff) e batem exatamente. Ver _stableTagReconfirmation para o detalhe por node-type."
+  },
+
+  "_validationNotes": {
+    "n8n-nodes-base.webhook": [
+      "'path' NÃO é required:true no código-fonte (default: ''). Se vazio, n8n gera um path baseado no webhookId automaticamente. Removido de requiredFields."
+    ],
+    "n8n-nodes-base.gmail": [
+      "Node é versionado (v1/v2, v2.2 é a versão padrão atual).",
+      "Além de 'gmailOAuth2', o node aceita credencial 'googleApi' (Service Account) quando authentication='serviceAccount'. Adicionada."
+    ],
+    "n8n-nodes-base.telegram": [
+      "sendPhoto: campo 'file' NÃO é required:true — só aparece quando binaryData=false (modo texto/URL). Quando binaryData=true, usa-se binaryPropertyName. Removido de requiredFields; mantido só 'chatId'."
+    ],
+    "n8n-nodes-base.emailSend": [
+      "'subject' NÃO é required:true no código-fonte (só fromEmail e toEmail têm required:true). Removido."
+    ],
+    "n8n-nodes-base.googleSheets": [
+      "Além de 'googleSheetsOAuth2Api', aceita credencial 'googleApi' (Service Account) quando authentication='serviceAccount'. Adicionada.",
+      "resource 'sheet': operações 'append' e 'update' também exigem o campo 'columns' (resourceMapper, required:true). Adicionado.",
+      "A operação que apaga a ABA inteira tem valor interno 'remove' (displayName 'Delete'), NÃO 'delete'. O valor 'delete' no código real corresponde a 'Delete Rows or Columns' (apaga linhas/colunas, exige campos diferentes: toDelete/startIndex/numberToDelete). Renomeado de 'delete' para 'remove' para preservar a semântica original do curador (apagar a aba)."
+    ],
+    "n8n-nodes-base.googleDrive": [
+      "Além de 'googleDriveOAuth2Api', aceita credencial 'googleApi' (Service Account) quando authentication='serviceAccount'. Adicionada.",
+      "file.delete: o valor real da operação é 'deleteFile', não 'delete'. Corrigido.",
+      "file.upload: campo 'name' NÃO é required:true (se omitido, usa o nome do arquivo binário ou o nome original). Removido de requiredFields (upload passa a exigir só o resourceLocator implícito via binary/fileContent, sem campo obrigatório nomeado).",
+      "folder.create: campo 'name' NÃO é required:true (se omitido, usa 'Untitled'). Removido de requiredFields."
+    ],
+    "n8n-nodes-base.googleCalendar": [
+      "O campo real NÃO é 'calendarId' (string simples) e sim 'calendar', do tipo resourceLocator ({ mode, value }). Corrigido em create/delete/get."
+    ],
+    "n8n-nodes-base.redis": [
+      "publish: o campo de conteúdo da mensagem chama-se 'messageData', não 'message'. Corrigido.",
+      "set: campo 'value' NÃO é required:true no código-fonte (só 'key' tem a flag). Mantido apenas 'key' em requiredFields, mas 'value' continua sendo necessário na prática para a operação fazer sentido — sinalizado aqui."
+    ],
+    "n8n-nodes-base.ftp": [
+      "Operações 'folderCreate' e 'folderDelete' NÃO EXISTEM no node atual. As únicas operações reais são: delete, download, list, rename, upload. Removidas do schema.",
+      "Além da credencial 'ftp' (quando protocol='ftp'), o node tem uma credencial condicional 'sftp' (quando protocol='sftp'). Adicionada."
+    ],
+    "n8n-nodes-base.graphql": [
+      "credentials NÃO é uma lista vazia: o node declara 4 credenciais condicionais dependendo do parâmetro 'authentication': httpBasicAuth, httpDigestAuth, httpHeaderAuth, httpCustomAuth (todas opcionais/mutuamente exclusivas, nenhuma é obrigatória por padrão pois há também a opção 'none'). Adicionadas para refletir a realidade."
+    ],
+    "n8n-nodes-base.openAi": [
+      "Este node está marcado 'hidden: true' no código-fonte — é uma versão LEGADA mantida só por compatibilidade retroativa; não pode mais ser adicionado a partir do painel de nodes do n8n (foi substituído pelo node OpenAI do pacote @n8n/n8n-nodes-langchain).",
+      "O node NÃO é 'flat': tem resource ('chat' | 'text' | 'image') e operation (chat.complete; text.complete/edit/moderate; image.create). Estrutura adicionada.",
+      "Nenhum campo tem required:true no código-fonte (nem 'prompt' nem 'model'), então requiredFields fica vazio em todas as operações — isso é o comportamento real, não um erro de omissão."
+    ],
+    "outros_nodes_confirmados_sem_alteracao": [
+      "httpRequest, respondToWebhook, set, if, switch, merge, code, noOp, wait, splitInBatches, filter, scheduleTrigger, executeWorkflow, executeWorkflowTrigger, errorTrigger, postgres, mySql, supabase, s3, html, dateTime: validados contra o código-fonte e batem exatamente com o que já estava no arquivo original."
+    ]
+  },
+
+  "_stableTagReconfirmation": {
+    "reconfirmedAt": "2026-07-01",
+    "reconfirmedAgainstTag": "n8n@2.27.5",
+    "reconfirmedAgainstCommit": "1734b13085d172c8d71ab01dc01a8cadc35a2c76",
+    "method": "GitHub compare API (n8n@2.27.5...master) mostrou 0 arquivos alterados em packages/nodes-base/{nodes,credentials}; cada ponto abaixo foi, além disso, checado diretamente lendo o arquivo-fonte na tag (não só inferido do diff vazio).",
+    "results": {
+      "n8n-nodes-base.webhook": "Confirmado: campo 'path' sem required:true, default '' (Webhook.node.ts).",
+      "n8n-nodes-base.gmail": "Confirmado: credenciais 'gmailOAuth2' + 'googleApi' condicional a authentication='serviceAccount' (GmailV2.node.ts). CORREÇÃO NOVA encontrada nesta reconfirmação (vale tanto em master quanto em 2.27.5, não é diferença de versão): o campo 'message' também é required:true para message.send, não só para message.reply (MessageDescription.ts) — estava faltando em requiredFields de 'send'. Adicionado.",
+      "n8n-nodes-base.telegram": "Confirmado: campo 'file' de sendPhoto sem required:true quando binaryData=false (Telegram.node.ts).",
+      "n8n-nodes-base.emailSend": "Confirmado: 'fromEmail' e 'toEmail' required:true, 'subject' sem required:true (v2/descriptions.ts).",
+      "n8n-nodes-base.googleSheets": "Confirmado: 'columns' required:true em append e update; operação 'remove' (apagar aba) é um arquivo separado de 'delete' (apagar linhas/colunas) — ambos existem com semânticas diferentes, exatamente como documentado.",
+      "n8n-nodes-base.googleDrive": "Confirmado: credencial 'googleApi' condicional a serviceAccount (versionDescription.ts); file.deleteFile é o valor real da operação; 'name' sem required:true em upload e em folder.create.",
+      "n8n-nodes-base.googleCalendar": "Confirmado: campo real é 'calendar' (resourceLocator), não 'calendarId' (EventDescription.ts).",
+      "n8n-nodes-base.redis": "Confirmado: publish usa 'messageData' (required:true, junto com 'channel'); set.value sem required:true (só 'key' tem a flag).",
+      "n8n-nodes-base.ftp": "Confirmado: únicas operações existentes são delete/download/list/rename/upload (sem folderCreate/folderDelete); credencial condicional 'sftp' quando protocol='sftp', além de 'ftp'.",
+      "n8n-nodes-base.graphql": "Confirmado: 4 credenciais condicionais (httpBasicAuth, httpDigestAuth, httpHeaderAuth, httpCustomAuth), nenhuma obrigatória por padrão (existe também a opção 'none').",
+      "n8n-nodes-base.openAi": "Confirmado: node com hidden:true; estrutura resource+operation (chat/text/image); nenhum campo de conteúdo (prompt/model) tem required:true — só a credencial 'openAiApi' em si é required."
+    },
+    "conclusao": "11/11 pontos sensíveis batem em n8n@2.27.5 exatamente como documentado para 'master'. 1 correção adicional foi encontrada (gmail message.send exigia também o campo 'message', não só sendTo/subject) — não é uma diferença entre master e 2.27.5 (o código é idêntico nas duas), foi uma omissão da curadoria original que esta reconfirmação capturou. Ver data/node-validation-rules.json > n8n-nodes-base.gmail > resources.message.operations.send."
+  },
+
+  "n8n-nodes-base.httpRequest": {
+    "displayName": "HTTP Request",
+    "credentials": [],
+    "requiredFields": ["url"]
+  },
+  "n8n-nodes-base.webhook": {
+    "displayName": "Webhook",
+    "credentials": [],
+    "requiredFields": []
+  },
+  "n8n-nodes-base.respondToWebhook": {
+    "displayName": "Respond to Webhook",
+    "credentials": [],
+    "requiredFields": []
+  },
+  "n8n-nodes-base.set": {
+    "displayName": "Edit Fields (Set)",
+    "credentials": [],
+    "requiredFields": []
+  },
+  "n8n-nodes-base.if": {
+    "displayName": "If",
+    "credentials": [],
+    "requiredFields": []
+  },
+  "n8n-nodes-base.switch": {
+    "displayName": "Switch",
+    "credentials": [],
+    "requiredFields": []
+  },
+  "n8n-nodes-base.merge": {
+    "displayName": "Merge",
+    "credentials": [],
+    "requiredFields": []
+  },
+  "n8n-nodes-base.code": {
+    "displayName": "Code",
+    "credentials": [],
+    "requiredFields": []
+  },
+  "n8n-nodes-base.noOp": {
+    "displayName": "No Operation",
+    "credentials": [],
+    "requiredFields": []
+  },
+  "n8n-nodes-base.wait": {
+    "displayName": "Wait",
+    "credentials": [],
+    "requiredFields": []
+  },
+  "n8n-nodes-base.splitInBatches": {
+    "displayName": "Split In Batches",
+    "credentials": [],
+    "requiredFields": []
+  },
+  "n8n-nodes-base.filter": {
+    "displayName": "Filter",
+    "credentials": [],
+    "requiredFields": []
+  },
+
+  "n8n-nodes-base.scheduleTrigger": {
+    "displayName": "Schedule Trigger",
+    "credentials": [],
+    "requiredFields": []
+  },
+  "n8n-nodes-base.executeWorkflow": {
+    "displayName": "Execute Workflow",
+    "credentials": [],
+    "requiredFields": ["workflowId"]
+  },
+  "n8n-nodes-base.executeWorkflowTrigger": {
+    "displayName": "Execute Workflow Trigger",
+    "credentials": [],
+    "requiredFields": []
+  },
+  "n8n-nodes-base.errorTrigger": {
+    "displayName": "Error Trigger",
+    "credentials": [],
+    "requiredFields": []
+  },
+
+  "n8n-nodes-base.gmail": {
+    "displayName": "Gmail",
+    "credentials": ["gmailOAuth2", "googleApi"],
+    "resourceField": "resource",
+    "operationField": "operation",
+    "resources": {
+      "message": {
+        "operations": {
+          "send":  { "requiredFields": ["sendTo", "subject", "message"] },
+          "reply": { "requiredFields": ["messageId", "message"] }
+        }
+      },
+      "draft": {
+        "operations": {
+          "create": { "requiredFields": ["subject"] }
+        }
+      },
+      "label": {
+        "operations": {
+          "create": { "requiredFields": ["name"] }
+        }
+      }
+    }
+  },
+  "n8n-nodes-base.telegram": {
+    "displayName": "Telegram",
+    "credentials": ["telegramApi"],
+    "resourceField": "resource",
+    "operationField": "operation",
+    "resources": {
+      "message": {
+        "operations": {
+          "sendMessage": { "requiredFields": ["chatId", "text"] },
+          "sendPhoto":   { "requiredFields": ["chatId"] }
+        }
+      },
+      "chat": {
+        "operations": {
+          "get": { "requiredFields": ["chatId"] }
+        }
+      }
+    }
+  },
+  "n8n-nodes-base.emailSend": {
+    "displayName": "Send Email",
+    "credentials": ["smtp"],
+    "requiredFields": ["fromEmail", "toEmail"]
+  },
+
+  "n8n-nodes-base.googleSheets": {
+    "displayName": "Google Sheets",
+    "credentials": ["googleSheetsOAuth2Api", "googleApi"],
+    "resourceField": "resource",
+    "operationField": "operation",
+    "resources": {
+      "sheet": {
+        "operations": {
+          "append": { "requiredFields": ["documentId", "sheetName", "columns"] },
+          "read":   { "requiredFields": ["documentId", "sheetName"] },
+          "update": { "requiredFields": ["documentId", "sheetName", "columns"] },
+          "remove": { "requiredFields": ["documentId", "sheetName"] }
+        }
+      }
+    }
+  },
+  "n8n-nodes-base.googleDrive": {
+    "displayName": "Google Drive",
+    "credentials": ["googleDriveOAuth2Api", "googleApi"],
+    "resourceField": "resource",
+    "operationField": "operation",
+    "resources": {
+      "file": {
+        "operations": {
+          "upload":     { "requiredFields": [] },
+          "download":   { "requiredFields": ["fileId"] },
+          "deleteFile": { "requiredFields": ["fileId"] }
+        }
+      },
+      "folder": {
+        "operations": {
+          "create": { "requiredFields": [] }
+        }
+      }
+    }
+  },
+  "n8n-nodes-base.googleCalendar": {
+    "displayName": "Google Calendar",
+    "credentials": ["googleCalendarOAuth2Api"],
+    "resourceField": "resource",
+    "operationField": "operation",
+    "resources": {
+      "event": {
+        "operations": {
+          "create": { "requiredFields": ["calendar", "start", "end"] },
+          "delete": { "requiredFields": ["calendar", "eventId"] },
+          "get":    { "requiredFields": ["calendar", "eventId"] }
+        }
+      }
+    }
+  },
+
+  "n8n-nodes-base.postgres": {
+    "displayName": "Postgres",
+    "credentials": ["postgres"],
+    "operationField": "operation",
+    "operations": {
+      "executeQuery": { "requiredFields": ["query"] },
+      "insert":       { "requiredFields": ["table"] },
+      "update":       { "requiredFields": ["table"] },
+      "delete":       { "requiredFields": ["table"] },
+      "select":       { "requiredFields": ["table"] }
+    }
+  },
+  "n8n-nodes-base.mySql": {
+    "displayName": "MySQL",
+    "credentials": ["mySql"],
+    "operationField": "operation",
+    "operations": {
+      "executeQuery": { "requiredFields": ["query"] },
+      "insert":       { "requiredFields": ["table"] },
+      "update":       { "requiredFields": ["table"] },
+      "delete":       { "requiredFields": ["table"] }
+    }
+  },
+  "n8n-nodes-base.supabase": {
+    "displayName": "Supabase",
+    "credentials": ["supabaseApi"],
+    "operationField": "operation",
+    "operations": {
+      "create": { "requiredFields": ["tableId"] },
+      "get":    { "requiredFields": ["tableId"] },
+      "getAll": { "requiredFields": ["tableId"] },
+      "update": { "requiredFields": ["tableId"] },
+      "delete": { "requiredFields": ["tableId"] }
+    }
+  },
+  "n8n-nodes-base.redis": {
+    "displayName": "Redis",
+    "credentials": ["redis"],
+    "operationField": "operation",
+    "operations": {
+      "get":     { "requiredFields": ["key"] },
+      "set":     { "requiredFields": ["key"] },
+      "delete":  { "requiredFields": ["key"] },
+      "incr":    { "requiredFields": ["key"] },
+      "publish": { "requiredFields": ["channel", "messageData"] }
+    }
+  },
+
+  "n8n-nodes-base.ftp": {
+    "displayName": "FTP",
+    "credentials": ["ftp", "sftp"],
+    "operationField": "operation",
+    "operations": {
+      "download": { "requiredFields": ["path"] },
+      "upload":   { "requiredFields": ["path"] },
+      "delete":   { "requiredFields": ["path"] },
+      "list":     { "requiredFields": ["path"] },
+      "rename":   { "requiredFields": ["oldPath", "newPath"] }
+    }
+  },
+  "n8n-nodes-base.s3": {
+    "displayName": "S3",
+    "credentials": ["s3"],
+    "resourceField": "resource",
+    "operationField": "operation",
+    "resources": {
+      "bucket": {
+        "operations": {
+          "create": { "requiredFields": ["bucketName"] }
+        }
+      },
+      "file": {
+        "operations": {
+          "upload":   { "requiredFields": ["bucketName", "fileName"] },
+          "download": { "requiredFields": ["bucketName", "fileKey"] },
+          "delete":   { "requiredFields": ["bucketName", "fileKey"] }
+        }
+      },
+      "folder": {
+        "operations": {
+          "create": { "requiredFields": ["bucketName", "folderName"] }
+        }
+      }
+    }
+  },
+
+  "n8n-nodes-base.graphql": {
+    "displayName": "GraphQL",
+    "credentials": ["httpBasicAuth", "httpDigestAuth", "httpHeaderAuth", "httpCustomAuth"],
+    "requiredFields": ["endpoint", "query"]
+  },
+  "n8n-nodes-base.html": {
+    "displayName": "HTML",
+    "credentials": [],
+    "requiredFields": []
+  },
+  "n8n-nodes-base.dateTime": {
+    "displayName": "Date & Time",
+    "credentials": [],
+    "requiredFields": []
+  },
+  "n8n-nodes-base.openAi": {
+    "displayName": "OpenAI",
+    "hidden": true,
+    "credentials": ["openAiApi"],
+    "resourceField": "resource",
+    "operationField": "operation",
+    "resources": {
+      "chat": {
+        "operations": {
+          "complete": { "requiredFields": [] }
+        }
+      },
+      "text": {
+        "operations": {
+          "complete": { "requiredFields": [] },
+          "edit":     { "requiredFields": [] },
+          "moderate": { "requiredFields": [] }
+        }
+      },
+      "image": {
+        "operations": {
+          "create": { "requiredFields": [] }
+        }
+      }
+    }
+  }
+}

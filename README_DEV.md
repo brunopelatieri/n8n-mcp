@@ -87,18 +87,47 @@ Headers obrigatórios:
 
 ---
 
-## 🛠️ Tools
+## 🛠️ Tools (22)
 
 - list_workflows
 - search_workflows
 - get_workflow
 - create_workflow
 - update_workflow
+- update_workflow_partial
 - activate_workflow
 - delete_workflow
 - get_executions
+- delete_execution
 - execute_workflow_via_webhook
 - get_workflow_as_template
+- health_check
+- manage_tags
+- manage_variables
+- manage_credentials
+- audit_instance
+- search_templates
+- get_template
+- deploy_template
+- generate_workflow_draft
+- validate_node_config
+
+---
+
+## 🔄 Atualizações recentes (2026-07-01)
+
+- **Fase 1 completa (Tasks 0-9)**: refactor modular (`src/*.js`), 11 tools novas, `update_workflow_partial` (diff em memória em vez de reenviar o workflow inteiro), proteção SSRF real (`src/ssrf-guard.js`, `N8N_SSRF_MODE`), erros padronizados (`N8nApiError`), fallback opt-in de credenciais do servidor (`ALLOW_DEFAULT_N8N_CREDENTIALS`, default `false`).
+- **Task 10 completa**: `validate_node_config` + `src/node-validator.js` — validação leve e estática (nunca bloqueia) contra 32 node-types curados manualmente em `data/node-validation-rules.json`. `create_workflow`/`update_workflow`/`update_workflow_partial` anexam `nodeValidationWarnings` best-effort quando há problema.
+- **175 testes** (`node:test`, zero dependências) + CI (`.github/workflows/ci.yml`).
+
+### ⚠️ Versão de referência da validação de nodes (`validate_node_config`)
+
+`data/node-validation-rules.json` foi curado e validado lendo o **código-fonte real** de `n8n-io/n8n` (não instalamos `n8n-nodes-base` neste repo). Isso tem uma pegadinha de versão importante para quem for manter esse arquivo:
+
+- `_meta.extractedFromVersion` = **`"2.29.0 (master, não lançado)"`** — a validação original foi feita contra a branch `master`, que fica à frente de qualquer tag publicada.
+- Para reduzir o risco de "só funciona em código não lançado", reconfirmamos todos os pontos sensíveis (`_validationNotes`) contra a última **tag estável, `n8n@2.27.5`**. Resultado: o código relevante em `packages/nodes-base/{nodes,credentials}` é **byte-idêntico** entre a tag e `master` — ver bloco `_stableTagReconfirmation` dentro do próprio JSON para o detalhe por node-type.
+- Essa reconfirmação encontrou e corrigiu 1 bug real (independente de versão): `gmail` `message.send` também exige o campo `message`, não só `sendTo`/`subject`.
+- **Se você atualizar a instância n8n-alvo para outra major/minor**, não assuma que `data/node-validation-rules.json` continua correto — releia os arquivos-fonte dos nodes afetados antes de confiar em `known: true`/`errors`/`warnings` para eles. `scripts/extract-node-schemas.js` (devtool para automatizar essa extração) ainda não foi implementado — a curadoria continua manual.
 
 ---
 

@@ -11,6 +11,8 @@ RUN npm install --omit=dev
 
 # Código
 COPY index.js secrets-reader.js ./
+COPY src/ ./src/
+COPY data/ ./data/
 
 EXPOSE 3000
 

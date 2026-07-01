@@ -21,3 +21,10 @@ Dockerfile.local
 # OS files
 .DS_Store
 Thumbs.db
+
+# Cópia local do projeto de referência (czlonkowski/n8n-mcp), usada apenas como
+# material de leitura/estudo para a SPEC em .context/spec/SPEC_N8N_TOOLS.md.
+# Nunca deve ser commitada neste repositório nem é dependência de build/runtime —
+# pode ser apagada a qualquer momento sem afetar index.js, secrets-reader.js,
+# package.json, Dockerfile ou docker-compose.yml.
+model-n8n-czlonkowski/
