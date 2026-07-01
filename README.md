@@ -38,6 +38,23 @@ Edite o arquivo `mcp.json` do Cursor com as credenciais fornecidas pelo administ
 
 ---
 
+## 🔧 Configuração completa — Claude Desktop, Claude Code e VS Code
+
+Para configurar o `bmcp-n8n` em diferentes ambientes, consulte o guia detalhado em:
+
+**📄 [CONFIG_MCP_CLAUDE_VSCODE.md](CONFIG_MCP_CLAUDE_VSCODE.md)**
+
+Este documento cobre:
+- **Claude Desktop App** — arquivo de configuração global (`claude_desktop_config.json`) com passo a passo
+- **Claude Code (CLI)** — setup global de confiança + `.mcp.json` por projeto
+- **VS Code + extensão Anthropic** e **Cursor IDE** — ambas as opções (global ou por workspace)
+- **Segurança** — boas práticas para não commitar credenciais, padrão `.mcp.json.example`
+- **Testes e troubleshooting** — diagnósticos de conexão e tabela de problemas/soluções
+
+Nenhuma credencial aparece neste README — todas as chaves ficam no `.mcp.json` (excluído do Git) ou nos arquivos de configuração do seu IDE.
+
+---
+
 ## 🐳 Imagem Docker
 
 A imagem oficial está publicada no Docker Hub por **Bruno Pelatieri Goulart**:
